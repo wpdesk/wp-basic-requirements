@@ -1,15 +1,10 @@
 <?php
 
-if ( ! class_exists( 'WPDesk_Buildable' ) ) {
-	require_once 'Builder/Buildable.php';
-}
-
-
 /**
  * Structure with core info about plugin
  * have to be compatible with PHP 5.2.x
  */
-class WPDesk_Plugin_Info implements WPDesk_Buildable {
+class WPDesk_Plugin_Info  {
 	/** @var string */
 	private $plugin_file_name;
 
