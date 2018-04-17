@@ -30,14 +30,14 @@ class WPDesk_Basic_Requirement_Checker {
     private $notices;
 
     /**
-     * @param $plugin_file
-     * @param $php_version
-     * @param $wp_version
-     * @param string|null $wc_version
+     * @param string $plugin_file
+     * @param string $plugin_name
+     * @param string $php_version
+     * @param string $wp_version
      */
-    public function __construct( $plugin_file, $php_version, $wp_version ) {
+    public function __construct( $plugin_file, $plugin_name, $php_version, $wp_version ) {
         $this->plugin_file = $plugin_file;
-        $this->plugin_name = $this->extract_plugin_title_from_header( $plugin_file );
+        $this->plugin_name = $plugin_name;
         $this->set_min_php_require( $php_version );
         $this->set_min_wp_require( $wp_version );
 
@@ -122,19 +122,6 @@ class WPDesk_Basic_Requirement_Checker {
         $this->setting_require[ $setting ] = $value;
 
         return $this;
-    }
-
-    /**
-     * @param string $file
-     *
-     * @return string mixed
-     */
-    private function extract_plugin_title_from_header( $file ) {
-        $plugin_data = get_file_data( $file, array(
-            'title' => 'Plugin Name'
-        ) );
-
-        return $plugin_data['title'];
     }
 
     /**
