@@ -4,7 +4,7 @@
  * Structure with core info about plugin
  * have to be compatible with PHP 5.2.x
  */
-class WPDesk_Plugin_Info  {
+class WPDesk_Plugin_Info implements WPDesk_Translable, WPDesk_Buildable {
 	/** @var string */
 	private $plugin_file_name;
 
@@ -93,6 +93,9 @@ class WPDesk_Plugin_Info  {
 		$this->release_date = $release_date;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function get_class_name() {
 		return $this->class_name;
 	}
@@ -104,12 +107,10 @@ class WPDesk_Plugin_Info  {
 		$this->class_name = $class_name;
 	}
 
-	public function get_build_priority() {
-		return 0;
+	/**
+	 * @return string
+	 */
+	public function get_text_domain() {
+		return strtolower( $this->get_plugin_dir() );
 	}
-
-	public function get_post_load_file() {
-	}
-
-
 }
