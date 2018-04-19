@@ -23,6 +23,9 @@ class WPDesk_Plugin_Info implements WPDesk_Translable, WPDesk_Buildable {
 	/** @var \DateTimeInterface */
 	private $release_date;
 
+	/** string */
+	private $text_domain;
+
 	/**
 	 * @return string
 	 */
@@ -111,6 +114,13 @@ class WPDesk_Plugin_Info implements WPDesk_Translable, WPDesk_Buildable {
 	 * @return string
 	 */
 	public function get_text_domain() {
-		return strtolower( $this->get_plugin_dir() );
+		return $this->text_domain;
+	}
+
+	/**
+	 * @param $value
+	 */
+	public function set_text_domain($value) {
+		$this->text_domain = $value;
 	}
 }
