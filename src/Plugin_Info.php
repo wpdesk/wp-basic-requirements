@@ -1,5 +1,12 @@
 <?php
 
+if (!class_exists('WPDesk_Translable')) {
+	require_once 'Translable.php';
+}
+if (!class_exists('WPDesk_Buildable')) {
+	require_once 'Buildable.php';
+}
+
 /**
  * Structure with core info about plugin
  * have to be compatible with PHP 5.2.x
