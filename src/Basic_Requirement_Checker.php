@@ -35,6 +35,8 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	/** @var @string */
 	private $text_domain;
 
+	const EXTENSION_NAME_OPENSSL = 'openssl';
+
 	/**
 	 * @param string $plugin_file
 	 * @param string $plugin_name
@@ -50,10 +52,10 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 		$this->set_min_php_require( $php_version );
 		$this->set_min_wp_require( $wp_version );
 
-		$this->plugin_require  = [];
-		$this->module_require  = [];
-		$this->setting_require = [];
-		$this->notices         = [];
+		$this->plugin_require  = array();
+		$this->module_require  = array();
+		$this->setting_require = array();
+		$this->notices         = array();
 	}
 
 	public function get_text_domain() {
@@ -150,7 +152,7 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	 * @return array
 	 */
 	private function prepare_requirement_notices() {
-		$notices = [];
+		$notices = array();
 		if ( ! $this->is_php_at_least( $this->min_php_version ) ) {
 			$notices[] = $this->prepare_notice_message( sprintf( __( 'The &#8220;%s&#8221; plugin cannot run on PHP versions older than %s. Please contact your host and ask them to upgrade.',
 				$this->get_text_domain() ), esc_html( $this->plugin_name ), $this->min_php_version ) );
@@ -270,8 +272,8 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	 * @return void
 	 */
 	public function disable_plugin_render_notice() {
-		add_action( 'admin_notices', [ $this, 'deactivate_action' ] );
-		add_action( 'admin_notices', [ $this, 'render_notices_action' ] );
+		add_action( 'admin_notices', array( $this, 'deactivate_action' ) );
+		add_action( 'admin_notices', array( $this, 'render_notices_action' ) );
 	}
 
 	/**
@@ -331,10 +333,10 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	 * @return bool
 	 */
 	public static function is_wp_plugin_active( $plugin_file ) {
-		$active_plugins = (array) get_option( 'active_plugins', [] );
+		$active_plugins = (array) get_option( 'active_plugins', array() );
 
 		if ( is_multisite() ) {
-			$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', [] ) );
+			$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
 		}
 
 		return in_array( $plugin_file, $active_plugins ) || array_key_exists( $plugin_file, $active_plugins );
