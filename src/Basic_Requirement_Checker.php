@@ -341,4 +341,17 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 
 		return in_array( $plugin_file, $active_plugins ) || array_key_exists( $plugin_file, $active_plugins );
 	}
+
+	/**
+	 * Checks if ssl version is valid
+	 *
+	 * @param int $required_version Version in hex. Version 9.6 is 0x000906000
+	 * @see https://www.openssl.org/docs/man1.1.0/crypto/OPENSSL_VERSION_NUMBER.html
+	 *
+	 * @return bool
+	 */
+	public static function is_open_ssl_at_least( $required_version ) {
+		return defined( 'OPENSSL_VERSION_NUMBER' ) && OPENSSL_VERSION_NUMBER > $required_version;
+	}
+
 }
