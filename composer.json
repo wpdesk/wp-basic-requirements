@@ -22,7 +22,7 @@
 
     },
     "autoload-dev": {
-        "classmap": ["src"]
+        "classmap": ["src", "tests"]
     },
     "scripts": {
         "phpcs": "phpcs",
