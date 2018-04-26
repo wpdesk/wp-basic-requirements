@@ -1,7 +1,7 @@
 <?php
 
 if (!class_exists('WPDesk_Translable')) {
-	require_once '../Translable.php';
+	require_once dirname(__FILE__) . '/../Translable.php';
 }
 
 
