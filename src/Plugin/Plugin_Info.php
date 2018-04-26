@@ -1,17 +1,21 @@
 <?php
 
 if (!class_exists('WPDesk_Translable')) {
-	require_once 'Translable.php';
+	require_once '../Translable.php';
 }
 if (!class_exists('WPDesk_Buildable')) {
-	require_once 'Buildable.php';
+	require_once '../Buildable.php';
+}
+if (!class_exists('WPDesk_Has_Plugin_Info')) {
+	require_once 'Has_Plugin_Info.php';
 }
 
 /**
  * Structure with core info about plugin
+ *
  * have to be compatible with PHP 5.2.x
  */
-class WPDesk_Plugin_Info implements WPDesk_Translable, WPDesk_Buildable {
+class WPDesk_Plugin_Info implements WPDesk_Translable, WPDesk_Buildable, WPDesk_Has_Plugin_Info {
 	/** @var string */
 	private $plugin_file_name;
 
