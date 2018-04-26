@@ -1,5 +1,9 @@
 <?php
 
+if (!class_exists('WPDesk_Translable')) {
+	require_once 'Translable.php';
+}
+
 /**
  * Checks requirements for plugin
  * have to be compatible with PHP 5.2.x
