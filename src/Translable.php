@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Have info about textdomain
+ * Have info about textdomain - how to translate texts
+ *
  * have to be compatible with PHP 5.2.x
  */
 interface WPDesk_Translable  {
