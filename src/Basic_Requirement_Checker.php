@@ -11,6 +11,7 @@ if ( ! class_exists( 'WPDesk_Translable' ) ) {
 class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	const EXTENSION_NAME_OPENSSL = 'openssl';
 	const HOOK_ADMIN_NOTICES_ACTION = 'admin_notices';
+
 	/** @var string */
 	private $plugin_name = '';
 	/** @var string */
@@ -49,10 +50,10 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 		$this->set_min_php_require( $php_version );
 		$this->set_min_wp_require( $wp_version );
 
-		$this->plugin_require  = [];
-		$this->module_require  = [];
-		$this->setting_require = [];
-		$this->notices         = [];
+		$this->plugin_require  = array();
+		$this->module_require  = array();
+		$this->setting_require = array();
+		$this->notices         = array();
 	}
 
 	/**
@@ -156,7 +157,7 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	 * @return array
 	 */
 	private function prepare_requirement_notices() {
-		$notices = [];
+		$notices = array();
 		if ( ! $this->is_php_at_least( $this->min_php_version ) ) {
 			$notices[] = $this->prepare_notice_message( sprintf( __( 'The &#8220;%s&#8221; plugin cannot run on PHP versions older than %s. Please contact your host and ask them to upgrade.',
 				$this->get_text_domain() ), esc_html( $this->plugin_name ), $this->min_php_version ) );
@@ -171,7 +172,8 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 		}
 		if ( ! is_null( $this->min_openssl_version ) && ! $this->is_open_ssl_at_least( $this->min_openssl_version ) ) {
 			$notices[] = $this->prepare_notice_message( sprintf( __( 'The &#8220;%s&#8221; plugin cannot run without OpenSSL module version at least %s. Please update OpenSSL module.',
-				$this->get_text_domain() ), esc_html( $this->plugin_name ), '0x' . dechex( $this->min_openssl_version ) ) );
+				$this->get_text_domain() ), esc_html( $this->plugin_name ),
+				'0x' . dechex( $this->min_openssl_version ) ) );
 		}
 
 		$notices = $this->append_plugin_require_notices( $notices );
@@ -275,10 +277,10 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	 * @return bool
 	 */
 	public static function is_wp_plugin_active( $plugin_file ) {
-		$active_plugins = (array) get_option( 'active_plugins', [] );
+		$active_plugins = (array) get_option( 'active_plugins', array() );
 
 		if ( is_multisite() ) {
-			$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', [] ) );
+			$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
 		}
 
 		return in_array( $plugin_file, $active_plugins ) || array_key_exists( $plugin_file, $active_plugins );
@@ -345,8 +347,8 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	 * @return void
 	 */
 	public function disable_plugin_render_notice() {
-		add_action( self::HOOK_ADMIN_NOTICES_ACTION, [ $this, 'deactivate_action' ] );
-		add_action( self::HOOK_ADMIN_NOTICES_ACTION, [ $this, 'render_notices_action' ] );
+		add_action( self::HOOK_ADMIN_NOTICES_ACTION, array( $this, 'deactivate_action' ) );
+		add_action( self::HOOK_ADMIN_NOTICES_ACTION, array( $this, 'render_notices_action' ) );
 	}
 
 	/**
