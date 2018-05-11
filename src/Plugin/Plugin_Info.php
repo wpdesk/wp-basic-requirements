@@ -23,6 +23,9 @@ class WPDesk_Plugin_Info implements WPDesk_Translable, WPDesk_Buildable, WPDesk_
 	private $plugin_dir;
 
 	/** @var string */
+	private $plugin_url;
+
+	/** @var string */
 	private $class_name;
 
 	/** @var string */
@@ -63,6 +66,20 @@ class WPDesk_Plugin_Info implements WPDesk_Translable, WPDesk_Buildable, WPDesk_
 	 */
 	public function set_plugin_dir( $plugin_dir ) {
 		$this->plugin_dir = $plugin_dir;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function get_plugin_url() {
+		return $this->plugin_url;
+	}
+
+	/**
+	 * @param string $plugin_url
+	 */
+	public function set_plugin_url( $plugin_url ) {
+		$this->plugin_url = $plugin_url;
 	}
 
 	/**
