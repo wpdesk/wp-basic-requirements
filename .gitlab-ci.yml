@@ -1,5 +1,5 @@
 variables:
-  WPDESK_CI_VERSION: 1.10.16
+  WPDESK_CI_VERSION: 1.10.18
   MYSQL_ROOT_PASSWORD: mysql
   MYSQL_DATABASE: wptest
   MYSQL_USER: mysql
@@ -8,8 +8,10 @@ variables:
   PHP_ERROR_REPORTING: E_ALL
   COMPOSER_ALLOW_SUPERUSER: 1
   GIT_STRATEGY: fetch
+  ACCEPTANCE_ERROR_PATH: ${CI_PROJECT_DIR}/acceptance
 
 stages:
+  - tools
   - tests
   - pre-deploy
   - deploy
@@ -91,6 +93,34 @@ stages:
 before_script:
   - cd ${CI_PROJECT_DIR}
 
+phpmetric metrics:
+  stage: tools
+  image: wpdesknet/phpunit-woocommerce:0-0
+  allow_failure: true
+  when: manual
+  artifacts:
+    when: always
+    expire_in: 1 month
+    name: "metrics"
+    paths:
+      - ${CI_PROJECT_DIR}/phpmetric
+  script:
+    - echo ${WPDESK_CI_VERSION}
+    - composer require phpmetrics/phpmetrics
+    - composer update --no-progress
+    - php ./vendor/bin/phpmetrics --report-html=phpmetric .
+
+churn metrics:
+  stage: tools
+  image: wpdesknet/phpunit-woocommerce:0-0
+  allow_failure: true
+  when: manual
+  script:
+    - echo ${WPDESK_CI_VERSION}
+    - composer require bmitch/churn-php
+    - composer update --no-progress
+    - vendor/bin/churn run classes inc
+
 code style test:
   stage: tests
   image: wpdesknet/phpunit-woocommerce:0-0
@@ -135,6 +165,57 @@ integration test php5-6:
 integration test php5-5:
   <<: *job-test-integration-template-fast
   image: wpdesknet/phpunit-woocommerce:4-0
+
+integration test current woocommerce:
+  <<: *job-test-integration-template-fast
+  image: wpdesknet/phpunit-woocommerce:0-0
+  allow_failure: true
+  before_script:
+    - cd /tmp
+    - rm -rf woocommerce
+    - git clone https://github.com/woocommerce/woocommerce.git
+    - cd ${CI_PROJECT_DIR}
+
+acceptance test:
+  image: wpdesknet/node
+  variables:
+    CI_DEBUG_SERVICES: trace
+  services:
+    - name: mysql:5.6
+      alias: mysqltests
+    - name: wpdesknet/apache-woocommerce:latest
+      alias: wootests
+    - name: selenium/standalone-chrome
+      alias: selenium
+  artifacts:
+    when: always
+    expire_in: 1 day
+    name: "error logs"
+    paths:
+      - ${CI_PROJECT_DIR}/acceptance
+  stage: tests
+  allow_failure: true
+  script:
+    - cd ${CI_PROJECT_DIR}
+    - composer update --no-progress --no-dev
+    - if [[ -f ${CI_PROJECT_DIR}/tests/acceptance/prepare.sh ]]; then sh ${CI_PROJECT_DIR}/tests/acceptance/prepare.sh; fi
+
+    - export MYSQL_IP=$(awk '/^[[:space:]]*($|#)/{next} /mysqltests/{print $1; exit}' /etc/hosts)
+    - export WOOTESTS_IP=$(awk '/^[[:space:]]*($|#)/{next} /wootests/{print $1; exit}' /etc/hosts)
+    - echo "http://wootests/wpdesk_init.php?mysql_ip=${MYSQL_IP}&wootests_ip=${WOOTESTS_IP}"
+    - wget -O /tmp/wpdesk_init.txt "http://wootests/wpdesk_init.php?mysql_ip=${MYSQL_IP}&wootests_ip=${WOOTESTS_IP}"
+    - tail -50 /tmp/wpdesk_init.txt
+
+    - sh /tmp/clone.sh git@gitlab.com:wpdesk/plugins-tests.git /tmp/tests headless
+    - cd /tmp/tests
+    - npm install
+    - npm install -g grunt-cli
+    - cd node_modules/.bin
+    - ./webdriver-manager update
+    - cd ../
+    - mkdir -p ${CI_PROJECT_DIR}/acceptance/reports/html/screenshot
+    - grunt chrome-${CI_PROJECT_NAME}
+
 
 apigen docs:
   image:
