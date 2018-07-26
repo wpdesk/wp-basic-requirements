@@ -1,5 +1,5 @@
 variables:
-  WPDESK_CI_VERSION: 1.10.18
+  WPDESK_CI_VERSION: 1.10.19
   MYSQL_ROOT_PASSWORD: mysql
   MYSQL_DATABASE: wptest
   MYSQL_USER: mysql
@@ -121,14 +121,14 @@ churn metrics:
     - composer update --no-progress
     - vendor/bin/churn run classes inc
 
-code style test:
-  stage: tests
-  image: wpdesknet/phpunit-woocommerce:0-0
-  allow_failure: true
-  script:
-    - echo ${WPDESK_CI_VERSION}
-    - composer update --no-progress
-    - vendor/bin/phpcs
+#code style test:
+# stage: tests
+#  image: wpdesknet/phpunit-woocommerce:0-0
+#  allow_failure: true
+#  script:
+#    - echo ${WPDESK_CI_VERSION}
+#    - composer update --no-progress
+#    - vendor/bin/phpcs
 
 unit test lastest:
   <<: *job-test-unit-template-fast
@@ -270,7 +270,7 @@ build to deploy:
     - cp -rf /tmp/release/* ${CI_PROJECT_DIR}/release/${CI_PROJECT_NAME}
     - cd ${CI_PROJECT_DIR}/release/${CI_PROJECT_NAME}
     - composer install --no-dev --no-progress --optimize-autoloader
-    - rm -rf build-coverage release tests docs .git .editorconfig .gitignore .gitlab-ci.yml apigen.neon
+    - rm -rf build-coverage release tests docs .git .editorconfig .gitignore .gitlab-ci.yml apigen.neon phpunit.xml acceptance test_soap.php .gitlab
     - rm -rf composer.json composer.lock phpcs.xml.dist phpunit-integration.xml phpunit-unit.xml composer.phar wp-cli.phar
     - cd ../
     - zip -r -q ../release.zip ./
