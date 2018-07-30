@@ -347,7 +347,6 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	 * @return void
 	 */
 	public function disable_plugin_render_notice() {
-		add_action( self::HOOK_ADMIN_NOTICES_ACTION, array( $this, 'deactivate_action' ) );
 		add_action( self::HOOK_ADMIN_NOTICES_ACTION, array( $this, 'render_notices_action' ) );
 	}
 
@@ -361,14 +360,4 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 			echo $notice;
 		}
 	}
-
-	/**
-	 * @return void
-	 */
-	public function deactivate_action() {
-		if ( isset( $this->plugin_file ) ) {
-			deactivate_plugins( plugin_basename( $this->plugin_file ) );
-		}
-	}
-
 }
