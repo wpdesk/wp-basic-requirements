@@ -1,12 +1,12 @@
 <?php
 
-if (!class_exists('WPDesk_Translable')) {
+if ( ! interface_exists( 'WPDesk_Translable' ) ) {
 	require_once dirname(__FILE__) . '/../Translable.php';
 }
-if (!class_exists('WPDesk_Buildable')) {
+if ( ! class_exists( 'WPDesk_Buildable' ) ) {
 	require_once dirname(__FILE__) . '/../Buildable.php';
 }
-if (!class_exists('WPDesk_Has_Plugin_Info')) {
+if ( ! class_exists( 'WPDesk_Has_Plugin_Info' ) ) {
 	require_once 'Has_Plugin_Info.php';
 }
 
