@@ -1,6 +1,6 @@
 <?php
 
-if ( ! class_exists( 'WPDesk_Translable' ) ) {
+if ( ! interface_exists( 'WPDesk_Translable' ) ) {
 	require_once 'Translable.php';
 }
 
